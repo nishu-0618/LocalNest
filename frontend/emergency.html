@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Emergency Support — LocalNest</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .emergency-layout {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .emergency-header {
+      background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%);
+      color: white;
+      padding: 50px 40px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(239, 71, 58, 0.25);
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .emergency-header h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .emergency-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .pulse-glow {
+      animation: pulse-red 2s infinite;
+    }
+
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 0 0 rgba(239, 71, 58, 0.5); }
+      70% { box-shadow: 0 0 0 15px rgba(239, 71, 58, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 71, 58, 0); }
+    }
+
+    .emergency-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .emergency-card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 10px 25px rgba(239, 71, 58, 0.05);
+      border-left: 6px solid #ef473a;
+      border-right: 1px solid #ffebeb;
+      border-top: 1px solid #ffebeb;
+      border-bottom: 1px solid #ffebeb;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .emergency-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 35px rgba(239, 71, 58, 0.15);
+    }
+
+    .emergency-avatar-col {
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .emergency-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 3px solid #ef473a;
+      background: #ffebeb;
+      color: #ef473a;
+      font-size: 1.8rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .emergency-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .emergency-info {
+      flex: 1;
+    }
+
+    .emergency-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .emergency-title {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .emergency-desc {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .emergency-badge {
+      background: #ffebeb;
+      color: #ef473a;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .emergency-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: #ef473a;
+      border-radius: 50%;
+      display: inline-block;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    .emergency-trust {
+      display: inline-flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .trust-high { background: #eefbf4; color: var(--green); }
+    .trust-mid { background: #fdf6e2; color: #d4a373; }
+    .trust-low { background: #ffebeb; color: #ef473a; }
+
+    .help-action-btn {
+      padding: 14px 28px;
+      background: #ef473a;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(239, 71, 58, 0.3);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .help-action-btn:hover {
+      background: #d43f33;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(239, 71, 58, 0.4);
+    }
+
+    .emergency-contact-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 1001;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    .emergency-contact-modal.show {
+      display: flex;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+      position: relative;
+      border-top: 6px solid #ef473a;
+    }
+
+    .guest-alert {
+      background: #fdf6e2;
+      border-left: 4px solid #f39c12;
+      padding: 16px;
+      border-radius: 8px;
+      color: #79520e;
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .emergency-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      .help-action-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo" style="cursor: pointer;" onclick="window.location.href='index.html'">Local<span>Nest</span></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="home.html">Browse All</a>
+      <a href="housing.html">Housing</a>
+      <a href="borrow.html">Borrow Items</a>
+      <a href="lend.html">Lend Dashboard</a>
+      <a href="needs.html">Needs</a>
+      <a href="emergency.html" style="color:white; font-weight:bold;">🚨 Emergency Support</a>
+      <a href="notifications.html" id="nav-notif-icon" style="display:none;">🔔 <span id="nav-notif-count" style="display:none;background:red;color:white;border-radius:50%;padding:2px 6px;font-size:0.7rem;">0</span></a>
+      <a href="profile.html" id="nav-profile-link" style="display:none;">My Profile</a>
+      <a href="login.html" id="nav-login" class="nav-btn">Login / Demo</a>
+      <a href="#" id="nav-logout" class="nav-btn" style="display:none; background:#eee; color:#333;" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="emergency-layout">
+
+    <!-- Hero Header -->
+    <div class="emergency-header pulse-glow">
+      <h1>🚨 Hyperlocal Emergency Support</h1>
+      <p>Direct, immediate community help in Bangalore. No transaction fees, no delays. If a neighbor is in a critical spot, offer support instantly.</p>
+    </div>
+
+    <!-- Active Emergencies Grid -->
+    <div class="emergency-grid" id="emergencyGrid">
+      <div class="loading">⏳ Loading active neighborhood emergencies...</div>
+    </div>
+
+  </div>
+
+  <!-- Contact Modal -->
+  <div class="emergency-contact-modal" id="contactModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeContactModal()" style="position: absolute; right: 16px; top: 16px; background:#eee; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer;">✕</button>
+      <h3 style="font-size: 1.4rem; font-weight: 800; color: #ef473a; margin-bottom: 8px;">🤝 Contact Neighbor</h3>
+      <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 20px;" id="modalSubtitle">Coordinate direct assistance immediately.</p>
+      
+      <div id="modalBody">
+         <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/emergency.js"></script>
+</body>
+</html>

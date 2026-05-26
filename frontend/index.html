@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LocalNest — Your Neighborhood Community</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="logo" style="cursor: pointer;" onclick="window.location.href='index.html'">Local<span>Nest</span></div>
+    <nav>
+      <a href="index.html" style="color:white; font-weight:bold;">Home</a>
+      <a href="home.html">Browse All</a>
+      <a href="housing.html">Housing</a>
+      <a href="borrow.html">Borrow Items</a>
+      <a href="lend.html">Lend Dashboard</a>
+      <a href="needs.html">Needs</a>
+      <a href="emergency.html">🚨 Emergency Support</a>
+      <a href="notifications.html" id="nav-notif-icon" style="display:none;">🔔 <span id="nav-notif-count" style="display:none;background:red;color:white;border-radius:50%;padding:2px 6px;font-size:0.7rem;">0</span></a>
+      <a href="profile.html" id="nav-profile-link" style="display:none;">My Profile</a>
+      <a href="register.html" id="nav-register" class="nav-btn">Sign Up</a>
+      <a href="login.html" id="nav-login" class="nav-btn">Login / Demo</a>
+      <a href="#" id="nav-logout" class="nav-btn" style="display:none; background:#eee; color:#333;" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Your <span>Neighborhood</span><br/>Sharing Platform</h1>
+    <p>Borrow a hammer from next door. Find a roommate in your building. Exchange skills with your neighbor. No money wasted — just community.</p>
+    <div class="hero-buttons">
+      <a href="home.html"><button class="btn btn-primary">🏠 Browse Listings</button></a>
+      <a href="home.html"><button class="btn btn-outline">📍 Find Nearby</button></a>
+    </div>
+  </section>
+
+  <!-- Stats Bar — pulls live data from your backend -->
+  <section class="stats-bar">
+    <div class="stat-item">
+      <h3 id="stat-users">...</h3>
+      <p>Neighbors Registered</p>
+    </div>
+    <div class="stat-item">
+      <h3 id="stat-listings">...</h3>
+      <p>Live Listings</p>
+    </div>
+    <div class="stat-item">
+      <h3 id="stat-transactions">...</h3>
+      <p>Successful Exchanges</p>
+    </div>
+    <div class="stat-item">
+      <h3>4.6 ⭐</h3>
+      <p>Average Trust Score</p>
+    </div>
+  </section>
+
+  <!-- Problem Section -->
+  <section class="features" style="background: white;">
+    <h2 class="section-title">Sound familiar?</h2>
+    <p class="section-subtitle">These problems happen every day in every neighborhood</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔨</div>
+        <h3>Bought a hammer once</h3>
+        <p>Used it for 5 minutes. It's been in a drawer for 3 years. Your neighbor just bought the same one.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🚪</div>
+        <h3>Flatmate suddenly left</h3>
+        <p>Rent is due in 2 weeks. You don't know who to ask. OLX feels unsafe. You need a trusted neighbor.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🪜</div>
+        <h3>Need a ladder for an hour</h3>
+        <p>Shops want ₹2000 for one. Someone in your building has it sitting idle. You just don't know them.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤝</div>
+        <h3>Skills going to waste</h3>
+        <p>A retired engineer next door could fix your plumbing. A homemaker could teach cooking. Nobody knows.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="features">
+    <h2 class="section-title">LocalNest fixes all of this</h2>
+    <p class="section-subtitle">One platform for everything your neighborhood needs</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔧</div>
+        <h3>Borrow Resources</h3>
+        <p>List items you own. Borrow what you need. Hammer, ladder, drill, camera — all from trusted neighbors.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏠</div>
+        <h3>Find Roommates</h3>
+        <p>Match with nearby people based on budget, preferences, and location. Safe and community-verified.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎓</div>
+        <h3>Exchange Skills</h3>
+        <p>Teach what you know, learn what you need. Free exchange or paid — your choice.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⭐</div>
+        <h3>Trust Score System</h3>
+        <p>Every user has a trust score. Return items on time, get good reviews, build your reputation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="features" style="background: white;">
+    <h2 class="section-title">How it works</h2>
+    <p class="section-subtitle">Three simple steps</p>
+    <div class="features-grid" style="max-width: 700px;">
+      <div class="feature-card">
+        <div class="feature-icon">📍</div>
+        <h3>1. Join your neighborhood</h3>
+        <p>Sign up with your location. LocalNest shows you only people within your area — your actual neighbors.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3>2. List or browse</h3>
+        <p>Post what you have to offer or browse what your neighbors are sharing right now.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤝</div>
+        <h3>3. Connect and exchange</h3>
+        <p>Send a request, get approved, pick up the item, return it. Your trust score grows with every exchange.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2>Your best resource is your neighbor</h2>
+    <p>LocalNest just introduces you to them</p>
+    <a href="home.html"><button class="btn btn-outline">Browse Your Neighborhood →</button></a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Built with <span>♥</span> for local communities · LocalNest 2025</p>
+  </footer>
+
+  <script>
+    const API = 'http://localhost:3000';
+
+    async function loadStats() {
+      try {
+        const [usersRes, listingsRes, transRes] = await Promise.all([
+          fetch(`${API}/api/users`),
+          fetch(`${API}/api/listings`),
+          fetch(`${API}/api/transactions/completed-count`),
+        ]);
+
+        const users    = await usersRes.json();
+        const listings = await listingsRes.json();
+        const trans    = await transRes.json();
+
+        const userCount = users.total !== undefined ? users.total : (users.count || 0);
+        const listingCount = listings.total !== undefined ? listings.total : (listings.count || 0);
+        const liveExchanges = 10 + (trans.count || 0);
+
+        document.getElementById('stat-users').textContent        = userCount;
+        document.getElementById('stat-listings').textContent     = listingCount;
+        document.getElementById('stat-transactions').textContent = liveExchanges + '+';
+      } catch (e) {
+        document.getElementById('stat-users').textContent        = '10';
+        document.getElementById('stat-listings').textContent     = '19';
+        document.getElementById('stat-transactions').textContent = '10+';
+      }
+    }
+
+    loadStats();
+  </script>
+
+</body>
+</html>

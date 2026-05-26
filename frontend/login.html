@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login / Demo Users — LocalNest</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .auth-container {
+      max-width: 450px;
+      margin: 80px auto;
+      background: white;
+      padding: 32px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    
+    .auth-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem; }
+    .form-group input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; outline: none; }
+    .form-group input:focus { border-color: var(--primary); }
+    
+    .auth-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+    
+    .demo-users {
+      margin-top: 32px;
+      border-top: 1px solid #eee;
+      padding-top: 24px;
+    }
+    
+    .demo-btn {
+      width: 100%; padding: 10px; background: #f0f2f5; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; margin-bottom: 8px; text-align: left; font-weight: 600; display: flex; justify-content: space-between;
+    }
+    .demo-btn:hover { background: #e4e6e9; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">Local<span>Nest</span></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="home.html">Browse All</a>
+      <a href="needs.html">Needs</a>
+      <a href="emergency.html">🚨 Emergency Support</a>
+    </nav>
+  </header>
+
+  <div class="auth-container">
+    <div class="auth-title">Welcome Back</div>
+    <div id="loginError" style="color:red; margin-bottom:12px; font-size:0.9rem; text-align:center;"></div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="name@demo.com"/>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="password123"/>
+    </div>
+    <button class="auth-btn" onclick="login()">Login</button>
+
+    <div style="margin-top: 16px; text-align: center; font-size: 0.9rem; color: #666;">
+      Don't have an account? <a href="register.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Sign up here</a>
+    </div>
+    
+    <div class="demo-users">
+      <div style="font-size:0.85rem; color:#888; margin-bottom:16px; text-align:center;">Or quick-login as a Bangalore Demo User (password123):</div>
+      <button class="demo-btn" onclick="quickLogin('rahul@demo.com')" style="display:flex; justify-content:space-between; align-items:center; padding:12px; margin-bottom:10px; border-left: 4px solid var(--green);">
+        <div>
+          <strong style="color:var(--dark);">Rahul Verma</strong> <span style="font-size:0.75rem; background:#eefbf4; color:var(--green); padding:2px 8px; border-radius:10px; font-weight:800; margin-left:6px;">84 Trust</span>
+          <div style="font-size:0.78rem; color:#666; margin-top:2px;">📍 Kengeri · Trusted Lender (Offers Drill)</div>
+        </div>
+        <span style="font-size:0.82rem; font-weight:bold; color:var(--primary);">Select ➔</span>
+      </button>
+      <button class="demo-btn" onclick="quickLogin('aisha@demo.com')" style="display:flex; justify-content:space-between; align-items:center; padding:12px; margin-bottom:10px; border-left: 4px solid var(--green);">
+        <div>
+          <strong style="color:var(--dark);">Aisha Khan</strong> <span style="font-size:0.75rem; background:#eefbf4; color:var(--green); padding:2px 8px; border-radius:10px; font-weight:800; margin-left:6px;">78 Trust</span>
+          <div style="font-size:0.78rem; color:#666; margin-top:2px;">📍 RR Nagar · Active Borrower (Has active request)</div>
+        </div>
+        <span style="font-size:0.82rem; font-weight:bold; color:var(--primary);">Select ➔</span>
+      </button>
+      <button class="demo-btn" onclick="quickLogin('sneha@demo.com')" style="display:flex; justify-content:space-between; align-items:center; padding:12px; margin-bottom:10px; border-left: 4px solid var(--green);">
+        <div>
+          <strong style="color:var(--dark);">Sneha Reddy</strong> <span style="font-size:0.75rem; background:#eefbf4; color:var(--green); padding:2px 8px; border-radius:10px; font-weight:800; margin-left:6px;">88 Trust</span>
+          <div style="font-size:0.78rem; color:#666; margin-top:2px;">📍 Uttarahalli · PG Helper (Offers Stoves/Cooker)</div>
+        </div>
+        <span style="font-size:0.82rem; font-weight:bold; color:var(--primary);">Select ➔</span>
+      </button>
+      <button class="demo-btn" onclick="quickLogin('varun@demo.com')" style="display:flex; justify-content:space-between; align-items:center; padding:12px; margin-bottom:10px; border-left: 4px solid #ef473a;">
+        <div>
+          <strong style="color:var(--dark);">Varun Shetty</strong> <span style="font-size:0.75rem; background:#ffebeb; color:#ef473a; padding:2px 8px; border-radius:10px; font-weight:800; margin-left:6px;">46 Trust</span>
+          <div style="font-size:0.78rem; color:#666; margin-top:2px;">📍 Srinivaspura · Student Lender (Offers Textbooks)</div>
+        </div>
+        <span style="font-size:0.82rem; font-weight:bold; color:var(--primary);">Select ➔</span>
+      </button>
+      <button class="demo-btn" onclick="quickLogin('kavya@demo.com')" style="display:flex; justify-content:space-between; align-items:center; padding:12px; margin-bottom:10px; border-left: 4px solid #ef473a;">
+        <div>
+          <strong style="color:var(--dark);">Kavya Gowda</strong> <span style="font-size:0.75rem; background:#ffebeb; color:#ef473a; padding:2px 8px; border-radius:10px; font-weight:800; margin-left:6px;">39 Trust</span>
+          <div style="font-size:0.78rem; color:#666; margin-top:2px;">📍 Kengeri Sat. · Emergency Requester (Needs help)</div>
+        </div>
+        <span style="font-size:0.82rem; font-weight:bold; color:var(--primary);">Select ➔</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API = 'http://localhost:3000';
+    async function login(emailParam) {
+      const email = emailParam || document.getElementById('email').value;
+      const password = document.getElementById('password').value || 'password123';
+      const errorDiv = document.getElementById('loginError');
+      
+      try {
+        const res = await fetch(API + '/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+          localStorage.setItem('localnest_token', data.token);
+          localStorage.setItem('localnest_user', JSON.stringify(data.user));
+          window.location.href = 'home.html';
+        } else {
+          errorDiv.textContent = data.message;
+        }
+      } catch (err) {
+        errorDiv.textContent = 'Server error. Is backend running?';
+      }
+    }
+    
+    function quickLogin(email) {
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = 'password123';
+      login(email);
+    }
+  </script>
+
+</body>
+</html>

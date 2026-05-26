@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — LocalNest</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .auth-container {
+      max-width: 450px;
+      margin: 40px auto 80px;
+      background: white;
+      padding: 32px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .auth-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .auth-subtitle {
+      font-size: 0.9rem;
+      color: #888;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #eee;
+      border-radius: 8px;
+      outline: none;
+      font-size: 1rem;
+    }
+    .form-group input:focus { border-color: var(--primary); }
+
+    .password-strength {
+      font-size: 0.8rem;
+      margin-top: 6px;
+      padding: 8px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .password-strength.weak {
+      background: #ffebee;
+      color: #c62828;
+      display: block;
+    }
+
+    .password-strength.fair {
+      background: #fff3e0;
+      color: #e65100;
+      display: block;
+    }
+
+    .password-strength.good {
+      background: #f3e5f5;
+      color: #6a1b9a;
+      display: block;
+    }
+
+    .password-strength.strong {
+      background: #e8f5e9;
+      color: #2e7d32;
+      display: block;
+    }
+
+    .auth-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 8px;
+    }
+
+    .auth-btn:hover { opacity: 0.9; }
+    .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .auth-link {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .auth-link a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .auth-link a:hover { text-decoration: underline; }
+
+    .error-message {
+      color: #c62828;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .success-message {
+      color: #2e7d32;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .role-selection {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .role-btn {
+      padding: 10px;
+      border: 2px solid #eee;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .role-btn:hover { border-color: var(--primary); }
+    .role-btn.selected {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">Local<span>Nest</span></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="home.html">Browse All</a>
+      <a href="needs.html">Needs</a>
+      <a href="emergency.html">🚨 Emergency Support</a>
+      <a href="login.html" class="nav-btn">Login</a>
+    </nav>
+  </header>
+
+  <div class="auth-container">
+    <div class="auth-title">Join LocalNest</div>
+    <div class="auth-subtitle">Create your account to start sharing with neighbors</div>
+
+    <div id="errorMessage" class="error-message"></div>
+    <div id="successMessage" class="success-message"></div>
+
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="name" placeholder="Your full name"/>
+    </div>
+
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="email" placeholder="you@example.com"/>
+    </div>
+
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" id="phone" placeholder="+91 9876543210"/>
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Create a strong password" onkeyup="checkPasswordStrength()"/>
+      <div id="passwordStrength" class="password-strength"></div>
+    </div>
+
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input type="password" id="confirmPassword" placeholder="Confirm your password"/>
+    </div>
+
+    <div class="form-group">
+      <label>What's your role?</label>
+      <div class="role-selection">
+        <button type="button" class="role-btn" onclick="selectRole(event, 'lender')">Lender</button>
+        <button type="button" class="role-btn" onclick="selectRole(event, 'borrower')">Borrower</button>
+        <button type="button" class="role-btn selected" onclick="selectRole(event, 'both')">Both</button>
+      </div>
+    </div>
+
+    <button class="auth-btn" onclick="register()">Create Account</button>
+
+    <div class="auth-link">
+      Already have an account? <a href="login.html">Login here</a>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API = 'http://localhost:3000';
+    let selectedRole = 'both';
+
+    function selectRole(evt, role) {
+      selectedRole = role;
+      document.querySelectorAll('.role-btn').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+      evt.target.classList.add('selected');
+    }
+
+    function checkPasswordStrength() {
+      const password = document.getElementById('password').value;
+      const strengthDiv = document.getElementById('passwordStrength');
+
+      let strength = 0;
+
+      if (password.length >= 8) strength++;
+      if (password.length >= 12) strength++;
+      if (/[a-z]/.test(password)) strength++;
+      if (/[A-Z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+      strengthDiv.className = 'password-strength';
+
+      if (password.length === 0) {
+        strengthDiv.textContent = '';
+      } else if (strength < 2) {
+        strengthDiv.className += ' weak';
+        strengthDiv.textContent = '⚠️ Weak password';
+      } else if (strength < 4) {
+        strengthDiv.className += ' fair';
+        strengthDiv.textContent = '⚠️ Fair password';
+      } else if (strength < 5) {
+        strengthDiv.className += ' good';
+        strengthDiv.textContent = '✓ Good password';
+      } else {
+        strengthDiv.className += ' strong';
+        strengthDiv.textContent = '✓ Strong password';
+      }
+    }
+
+    async function register() {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const errorDiv = document.getElementById('errorMessage');
+      const successDiv = document.getElementById('successMessage');
+
+      errorDiv.style.display = 'none';
+      successDiv.style.display = 'none';
+
+      // Validation
+      if (!name || !email || !phone || !password || !confirmPassword) {
+        errorDiv.textContent = '❌ Please fill in all fields';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errorDiv.textContent = '❌ Please enter a valid email address';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      if (password.length < 8) {
+        errorDiv.textContent = '❌ Password must be at least 8 characters';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        errorDiv.textContent = '❌ Passwords do not match';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      try {
+        // Generate a default location for Bangalore
+        const location = {
+          type: 'Point',
+          coordinates: [77.5946, 12.9716], // Default Bangalore coordinates
+          address: 'Bangalore'
+        };
+
+        console.log('Registering user:', { name, email, phone, role: selectedRole });
+
+        const res = await fetch(API + '/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+            password,
+            location,
+            role: selectedRole
+          })
+        });
+
+        const data = await res.json();
+        console.log('Registration response:', data);
+
+        if (data.success) {
+          localStorage.setItem('localnest_token', data.token);
+          localStorage.setItem('localnest_user', JSON.stringify(data.user));
+
+          successDiv.textContent = '✓ Account created successfully! Redirecting...';
+          successDiv.style.display = 'block';
+
+          // Redirect after 1.5 seconds
+          setTimeout(() => {
+            window.location.href = 'home.html';
+          }, 1500);
+        } else {
+          errorDiv.textContent = '❌ ' + (data.message || 'Registration failed');
+          errorDiv.style.display = 'block';
+        }
+      } catch (err) {
+        errorDiv.textContent = '❌ Server error. Is backend running?';
+        errorDiv.style.display = 'block';
+        console.error('Registration error:', err);
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Join LocalNest</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .add-header {
+      background: var(--dark);
+      padding: 40px;
+      color: white;
+      text-align: center;
+    }
+    .add-header h1 { font-size: 2rem; font-weight: 800; }
+    .add-header p  { color: #aaa; margin-top: 8px; }
+
+    .steps-bar {
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      padding: 0;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .step {
+      flex: 1;
+      text-align: center;
+      padding: 16px 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      max-width: 200px;
+    }
+
+    .step.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .step.done {
+      color: var(--green);
+      border-bottom-color: var(--green);
+    }
+
+    .step-num {
+      display: inline-flex;
+      width: 24px;
+      height: 24px;
+      background: #eee;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      margin-right: 6px;
+      font-weight: 700;
+    }
+
+    .step.active .step-num { background: var(--primary); color: white; }
+    .step.done   .step-num { background: var(--green);   color: white; }
+
+    .forms-container {
+      max-width: 680px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px;
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .form-card.active { display: block; }
+
+    .form-card h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .form-card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: 'Segoe UI', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+      color: var(--text);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .dynamic-fields {
+      background: #f8f9ff;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 8px;
+      border: 1px solid #e8e8ff;
+    }
+
+    .dynamic-fields h4 {
+      font-size: 0.85rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .submit-btn:hover {
+      background: #5a52e0;
+      transform: translateY(-1px);
+    }
+
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .skip-btn {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: var(--muted);
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+    }
+
+    .skip-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Success screen */
+    .success-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 40px 32px;
+      text-align: center;
+      display: none;
+    }
+
+    .success-card.active { display: block; }
+
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+    }
+
+    .success-card h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--green);
+    }
+
+    .success-card p {
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    .success-details {
+      background: #f8f9ff;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .success-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 0.88rem;
+    }
+
+    .success-row:last-child { border-bottom: none; }
+    .success-row span:first-child { color: var(--muted); }
+    .success-row span:last-child  { font-weight: 600; }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .action-btn {
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+
+    .action-btn.primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .action-btn.outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .action-btn:hover { transform: translateY(-2px); }
+
+    /* Trust updater */
+    .trust-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .trust-card h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .trust-card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+
+    .user-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .user-trust-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .user-trust-row:hover,
+    .user-trust-row.selected {
+      border-color: var(--primary);
+      background: #f8f8ff;
+    }
+
+    .user-trust-row .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .user-trust-row .user-info { flex: 1; }
+    .user-trust-row .user-name { font-weight: 700; font-size: 0.95rem; }
+    .user-trust-row .user-meta { color: var(--muted); font-size: 0.8rem; }
+
+    .trust-score-display {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .trust-bar-bg {
+      height: 5px;
+      background: #eee;
+      border-radius: 3px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+
+    .trust-bar-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .trust-controls {
+      background: #f8f9ff;
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid #e8e8ff;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .trust-controls.show { display: block; }
+    .trust-controls h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: var(--primary);
+    }
+
+    .trust-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .trust-btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .trust-btn:hover { transform: translateY(-2px); }
+    .trust-btn.increase { background: #E8F5E9; color: #2e7d32; }
+    .trust-btn.decrease { background: #FFEBEE; color: #c62828; }
+    .trust-btn.complete { background: var(--primary); color: white; }
+
+    .tab-bar {
+      background: white;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 10px 24px;
+      border-radius: 20px;
+      border: 2px solid #e0e0e0;
+      background: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active,
+    .tab-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .live-badge {
+      display: inline-block;
+      background: #E8F5E9;
+      color: var(--green);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-left: 8px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="logo" style="cursor: pointer;" onclick="window.location.href='index.html'">Local<span>Nest</span></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="home.html">Browse All</a>
+      <a href="housing.html">Housing</a>
+      <a href="borrow.html">Borrow Items</a>
+      <a href="lend.html">Lend Dashboard</a>
+      <a href="needs.html">Needs</a>
+      <a href="emergency.html">🚨 Emergency Support</a>
+      <a href="notifications.html" id="nav-notif-icon" style="display:none;">🔔 <span id="nav-notif-count" style="display:none;background:red;color:white;border-radius:50%;padding:2px 6px;font-size:0.7rem;">0</span></a>
+      <a href="profile.html" id="nav-profile-link" style="display:none;">My Profile</a>
+      <a href="login.html" id="nav-login" class="nav-btn">Login / Demo</a>
+      <a href="#" id="nav-logout" class="nav-btn" style="display:none; background:#eee; color:#333;" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <!-- Header -->
+  <div class="add-header">
+    <h1>🏘️ Join Your Neighborhood</h1>
+    <p>Register and post what you're offering — appear on the map instantly</p>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showMainTab('register', this)">
+      ➕ Register + Post Listing
+    </button>
+    <button class="tab-btn" onclick="showMainTab('trust', this)">
+      ⭐ Update Trust Score
+    </button>
+  </div>
+
+  <div class="forms-container">
+
+    <!-- ══ REGISTER + POST TAB ══ -->
+    <div id="maintab-register">
+
+      <!-- Step indicator -->
+      <div class="steps-bar" style="border-radius:12px;margin-bottom:24px;overflow:hidden">
+        <div class="step active" id="step1-ind">
+          <span class="step-num">1</span> Your Details
+        </div>
+        <div class="step" id="step2-ind">
+          <span class="step-num">2</span> Your Listing
+        </div>
+        <div class="step" id="step3-ind">
+          <span class="step-num">3</span> Done!
+        </div>
+      </div>
+
+      <!-- ── STEP 1: User details ── -->
+      <div class="form-card active" id="step1">
+        <h2>👤 Tell us about yourself</h2>
+        <p>Your details are only shown to people who click on your listing</p>
+
+        <div id="step1-logged-in-msg" style="background: #E8F5E9; border: 2px solid #2ecc71; padding: 14px; border-radius: 8px; margin-bottom: 20px; color: #2e7d32; display: none;">
+          ✓ You're logged in! Your details have been pre-filled. You can <strong>Skip</strong> this and go directly to your listing.
+        </div>
+
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="u-name" placeholder="e.g. Meena Sharma"/>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="u-email" placeholder="meena@gmail.com"/>
+          </div>
+          <div class="form-group">
+            <label>Phone *</label>
+            <input type="text" id="u-phone" placeholder="9876543210"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Your Neighborhood / Area *</label>
+          <input type="text" id="u-address" placeholder="e.g. Koramangala, Bangalore"/>
+        </div>
+
+        <div class="form-group">
+          <label>Bio (tell neighbors about yourself)</label>
+          <textarea id="u-bio" placeholder="e.g. Working professional in HSR. Love gardening and cooking."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Latitude</label>
+            <input type="number" id="u-lat" value="12.9716" step="0.0001"/>
+          </div>
+          <div class="form-group">
+            <label>Longitude</label>
+            <input type="number" id="u-lng" value="77.5946" step="0.0001"/>
+          </div>
+        </div>
+
+        <button class="submit-btn" onclick="registerUser()">
+          Continue → Add Your Listing
+        </button>
+        <button class="skip-btn" id="skip-user-btn" style="display:none;" onclick="setStep(2)">
+          Skip → Go to Listing Form
+        </button>
+      </div>
+
+      <!-- ── STEP 2: Listing details ── -->
+      <div class="form-card" id="step2">
+        <h2>📋 What are you offering?</h2>
+        <p>This will appear on the browse page for your neighbors to see</p>
+
+        <div class="form-group">
+          <label>What type of listing? *</label>
+          <select id="l-type" onchange="toggleListingFields()">
+            <option value="resource">🔧 Something to Borrow (tool, book, camera...)</option>
+            <option value="housing">🏠 Room / Flatmate / PG</option>
+            <option value="skill">🎓 Skill / Service (teaching, repair, cooking...)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Listing Title *</label>
+          <input type="text" id="l-title" placeholder="e.g. Hammer and drill available to borrow"/>
+        </div>
+
+        <div class="form-group">
+          <label>Description *</label>
+          <textarea id="l-desc" placeholder="Describe what you're offering, any conditions, how to contact you..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Tags (comma separated)</label>
+          <input type="text" id="l-tags" placeholder="e.g. tools, diy, free, weekend"/>
+        </div>
+
+        <!-- Resource fields -->
+        <div class="dynamic-fields" id="resource-fields">
+          <h4>🔧 Lend / Borrow Details</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Item Name</label>
+              <input type="text" id="r-name" placeholder="e.g. Bosch Drill"/>
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="r-category">
+                <option value="tools">Tools & DIY</option>
+                <option value="electronics">Electronics</option>
+                <option value="books">Books</option>
+                <option value="furniture">Furniture</option>
+                <option value="sports">Sports</option>
+                <option value="kitchen">Kitchen</option>
+                <option value="emergency">Emergency</option>
+                <option value="others">Others</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Condition</label>
+              <select id="r-condition">
+                <option value="new">New</option>
+                <option value="good">Good</option>
+                <option value="fair">Fair</option>
+                <option value="poor">Poor</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Max Borrow Days</label>
+              <input type="number" id="r-days" value="3"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Deposit Amount (₹) - 0 if none</label>
+              <input type="number" id="r-deposit" value="0"/>
+            </div>
+            <div class="form-group">
+              <label>Available Today?</label>
+              <select id="r-today">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top:10px;">
+            <label style="display:flex; align-items:center; gap:8px; font-weight:700; color:#e74c3c;">
+              <input type="checkbox" id="r-emergency" style="width:16px; height:16px;" />
+              🚨 Mark as Emergency Item (Medical, Supplies)
+            </label>
+          </div>
+        </div>
+
+        <!-- Housing fields -->
+        <div class="dynamic-fields" id="housing-fields" style="display:none">
+          <h4>🏠 Housing / Roommate Details</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Monthly Rent (₹)</label>
+              <input type="number" id="h-rent" placeholder="8000"/>
+            </div>
+            <div class="form-group">
+              <label>Security Deposit (₹)</label>
+              <input type="number" id="h-deposit" placeholder="20000"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Flat Type</label>
+              <select id="h-flattype">
+                <option value="pg">PG</option>
+                <option value="single">Single Room</option>
+                <option value="shared">Shared Room</option>
+                <option value="1bhk">1 BHK</option>
+                <option value="2bhk">2 BHK</option>
+                <option value="3bhk">3 BHK</option>
+                <option value="flat">Full Flat</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Furnishing</label>
+              <select id="h-furnished">
+                <option value="furnished">Fully Furnished</option>
+                <option value="semi-furnished">Semi-Furnished</option>
+                <option value="unfurnished">Unfurnished</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Society / Apartment Name</label>
+              <input type="text" id="h-society" placeholder="e.g. Prestige Lakeside"/>
+            </div>
+            <div class="form-group">
+              <label>Preferred Gender</label>
+              <select id="h-gender">
+                <option value="any">Any</option>
+                <option value="male">Male Only</option>
+                <option value="female">Female Only</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Amenities (comma separated)</label>
+            <input type="text" id="h-amenities" placeholder="WiFi, AC, Geyser, Gym, Pool"/>
+          </div>
+        </div>
+
+        <!-- Skill fields -->
+        <div class="dynamic-fields" id="skill-fields" style="display:none">
+          <h4>🎓 Skill Details</h4>
+          <div class="form-group">
+            <label>Skill / Service Name</label>
+            <input type="text" id="s-name" placeholder="e.g. Plumbing repair, Python tutoring"/>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Rate per Hour (₹) — 0 if free</label>
+              <input type="number" id="s-rate" value="0"/>
+            </div>
+            <div class="form-group">
+              <label>Open to Skill Exchange?</label>
+              <select id="s-exchange">
+                <option value="false">No — Paid only</option>
+                <option value="true">Yes — Will exchange</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button class="submit-btn" onclick="postListing()" style="margin-top:16px">
+          🚀 Post Listing — Go Live!
+        </button>
+        <button class="skip-btn" onclick="skipListing()">
+          Skip for now — just register me
+        </button>
+      </div>
+
+      <!-- ── STEP 3: Success ── -->
+      <div class="success-card" id="step3">
+        <div class="success-icon">🎉</div>
+        <h2>You're live on LocalNest!</h2>
+        <p id="success-msg">Your listing is now visible to your neighbors</p>
+
+        <div class="success-details" id="success-details"></div>
+
+        <div class="action-buttons">
+          <a class="action-btn primary" href="home.html">
+            🏘️ See Your Listing on Browse Page
+          </a>
+          <a class="action-btn outline" href="add.html">
+            ➕ Post Another Listing
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══ TRUST SCORE TAB ══ -->
+    <div id="maintab-trust" style="display:none">
+      <div class="trust-card">
+        <h2>⭐ Live Trust Score Updater
+          <span class="live-badge">● LIVE</span>
+        </h2>
+        <p>Select a neighbor and update their trust score — changes save to MongoDB Atlas instantly</p>
+
+        <div class="user-list" id="trust-user-list">
+          <div class="loading">Loading neighbors...</div>
+        </div>
+
+        <div class="trust-controls" id="trust-controls">
+          <h4 id="trust-selected-name">Selected User</h4>
+          <div class="trust-buttons">
+            <button class="trust-btn increase" onclick="updateTrust(5)">▲ +5 Transaction Done</button>
+            <button class="trust-btn increase" onclick="updateTrust(10)">▲ +10 Excellent Review</button>
+            <button class="trust-btn decrease" onclick="updateTrust(-5)">▼ -5 Late Return</button>
+            <button class="trust-btn decrease" onclick="updateTrust(-10)">▼ -10 Item Damaged</button>
+            <button class="trust-btn complete" onclick="updateTrust(2)">✅ +2 Exchange Complete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <p>Built with <span>♥</span> for local communities · LocalNest 2025</p>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API = 'http://localhost:3000';
+    let createdUserId = null;
+    let allUsers      = [];
+    let selectedUserId   = null;
+    let selectedUserName = null;
+
+    // ─────────────────────────────────────────
+    // MAIN TABS
+    // ─────────────────────────────────────────
+    function showMainTab(tab, btn) {
+      document.getElementById('maintab-register').style.display = tab === 'register' ? 'block' : 'none';
+      document.getElementById('maintab-trust').style.display    = tab === 'trust'    ? 'block' : 'none';
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // ─────────────────────────────────────────
+    // STEP INDICATOR
+    // ─────────────────────────────────────────
+    function setStep(step) {
+      // Hide all form cards
+      document.getElementById('step1').classList.remove('active');
+      document.getElementById('step2').classList.remove('active');
+      document.getElementById('step3').classList.remove('active');
+      document.getElementById('step3').style.display = 'none';
+
+      // Update step indicators
+      ['step1-ind','step2-ind','step3-ind'].forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.classList.remove('active','done');
+        if (i + 1 < step) el.classList.add('done');
+        if (i + 1 === step) el.classList.add('active');
+      });
+
+      if (step === 1) {
+        document.getElementById('step1').classList.add('active');
+      } else if (step === 2) {
+        document.getElementById('step2').classList.add('active');
+      } else if (step === 3) {
+        document.getElementById('step3').style.display = 'block';
+        document.getElementById('step3').classList.add('active');
+      }
+    }
+
+    // ─────────────────────────────────────────
+    // STEP 1 — REGISTER USER
+    // ─────────────────────────────────────────
+    async function registerUser() {
+      const name  = document.getElementById('u-name').value.trim();
+      const email = document.getElementById('u-email').value.trim();
+      const phone = document.getElementById('u-phone').value.trim();
+      const address = document.getElementById('u-address').value.trim();
+
+      if (!name || !email || !phone || !address) {
+        showToast('Please fill name, email, phone and area');
+        return;
+      }
+
+      const btn = document.querySelector('#step1 .submit-btn');
+      btn.disabled    = true;
+      btn.textContent = '⏳ Registering...';
+
+      try {
+        const res = await fetch(`${API}/api/users`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+            bio: document.getElementById('u-bio').value,
+            location: {
+              type: 'Point',
+              coordinates: [
+                parseFloat(document.getElementById('u-lng').value) || 77.5946,
+                parseFloat(document.getElementById('u-lat').value) || 12.9716,
+              ],
+              address,
+            },
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+          showToast(data.message || 'Registration failed');
+          btn.disabled    = false;
+          btn.textContent = 'Continue → Add Your Listing';
+          return;
+        }
+
+        createdUserId = data.data._id;
+
+        // Store user and token in localStorage for future reference
+        localStorage.setItem('localnest_user', JSON.stringify({
+          _id: data.data._id,
+          name: data.data.name,
+          email: data.data.email,
+          phone: data.data.phone,
+        }));
+
+        // Store token so user can post listings
+        if (data.token) {
+          localStorage.setItem('localnest_token', data.token);
+        }
+
+        showToast(`✅ Welcome to LocalNest, ${name}!`);
+        setStep(2);
+
+      } catch (err) {
+        showToast('Could not connect to server');
+      }
+
+      btn.disabled    = false;
+      btn.textContent = 'Continue → Add Your Listing';
+    }
+
+    // ─────────────────────────────────────────
+    // STEP 2 — POST LISTING
+    // ─────────────────────────────────────────
+    async function postListing() {
+      const type  = document.getElementById('l-type').value;
+      const title = document.getElementById('l-title').value.trim();
+      const desc  = document.getElementById('l-desc').value.trim();
+
+      if (!title || !desc) {
+        showToast('Please fill in the title and description');
+        return;
+      }
+
+      const btn = document.querySelector('#step2 .submit-btn');
+      btn.disabled    = true;
+      btn.textContent = '⏳ Posting...';
+
+      const address = document.getElementById('u-address').value.trim();
+
+      const body = {
+        postedBy: createdUserId,
+        type,
+        title,
+        description: desc,
+        tags: document.getElementById('l-tags').value
+          .split(',').map(s => s.trim()).filter(Boolean),
+        location: {
+          type: 'Point',
+          coordinates: [
+            parseFloat(document.getElementById('u-lng').value) || 77.5946,
+            parseFloat(document.getElementById('u-lat').value) || 12.9716,
+          ],
+          address,
+        },
+      };
+
+      if (type === 'resource') {
+        body.resourceDetails = {
+          itemName:          document.getElementById('r-name').value || title,
+          category:          document.getElementById('r-category').value,
+          condition:         document.getElementById('r-condition').value,
+          borrowDurationDays: parseInt(document.getElementById('r-days').value) || 1,
+          deposit:           parseInt(document.getElementById('r-deposit').value) || 0,
+          availableToday:    document.getElementById('r-today').value === 'true',
+          isEmergency:       document.getElementById('r-emergency').checked,
+          isFree:            (parseInt(document.getElementById('r-deposit').value) || 0) === 0,
+        };
+      }
+
+      if (type === 'housing') {
+        body.housingDetails = {
+          rent:             parseInt(document.getElementById('h-rent').value) || 0,
+          deposit:          parseInt(document.getElementById('h-deposit').value) || 0,
+          flatType:         document.getElementById('h-flattype').value,
+          furnished:        document.getElementById('h-furnished').value,
+          societyName:      document.getElementById('h-society').value.trim(),
+          genderPreference: document.getElementById('h-gender').value,
+          amenities: document.getElementById('h-amenities').value
+            .split(',').map(s => s.trim()).filter(Boolean),
+        };
+      }
+
+      if (type === 'skill') {
+        body.skillDetails = {
+          skillName:   document.getElementById('s-name').value || title,
+          ratePerHour: parseInt(document.getElementById('s-rate').value) || 0,
+          isExchange:  document.getElementById('s-exchange').value === 'true',
+        };
+      }
+
+      try {
+        const headers = { 'Content-Type': 'application/json' };
+
+        // Add auth token if user is logged in
+        const token = localStorage.getItem('localnest_token');
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        const res  = await fetch(`${API}/api/listings`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+          showToast(data.message || 'Failed to post listing');
+          btn.disabled    = false;
+          btn.textContent = '🚀 Post Listing — Go Live!';
+          return;
+        }
+
+        const listing = data.data;
+
+        // Show success
+        showSuccess(listing, type);
+
+      } catch (err) {
+        showToast('Could not post listing: ' + err.message);
+        btn.disabled    = false;
+        btn.textContent = '🚀 Post Listing — Go Live!';
+      }
+    }
+
+    // ─────────────────────────────────────────
+    // SKIP LISTING
+    // ─────────────────────────────────────────
+    function skipListing() {
+      document.getElementById('success-msg').textContent =
+        'You are registered! You can post a listing anytime.';
+      document.getElementById('success-details').innerHTML = `
+        <div class="success-row">
+          <span>Name</span>
+          <span>${document.getElementById('u-name').value}</span>
+        </div>
+        <div class="success-row">
+          <span>Status</span>
+          <span>Registered ✅</span>
+        </div>
+        <div class="success-row">
+          <span>Trust Score</span>
+          <span>50/100 (starting score)</span>
+        </div>
+      `;
+      setStep(3);
+    }
+
+    // ─────────────────────────────────────────
+    // SHOW SUCCESS SCREEN
+    // ─────────────────────────────────────────
+    function showSuccess(listing, type) {
+      const name  = document.getElementById('u-name').value;
+      const area  = document.getElementById('u-address').value;
+
+      let typeDetail = '';
+      if (type === 'resource') typeDetail = `Borrow duration: ${document.getElementById('r-days').value} days`;
+      if (type === 'housing')  typeDetail = `Rent: ₹${document.getElementById('h-rent').value}/month`;
+      if (type === 'skill')    typeDetail = document.getElementById('s-exchange').value === 'true'
+        ? 'Skill Exchange' : `₹${document.getElementById('s-rate').value}/hr`;
+
+      document.getElementById('success-msg').textContent =
+        `${name}'s listing is now live and visible to neighbors in ${area}!`;
+
+      document.getElementById('success-details').innerHTML = `
+        <div class="success-row">
+          <span>Posted by</span>
+          <span>${name}</span>
+        </div>
+        <div class="success-row">
+          <span>Listing</span>
+          <span>${listing.title}</span>
+        </div>
+        <div class="success-row">
+          <span>Type</span>
+          <span>${type}</span>
+        </div>
+        <div class="success-row">
+          <span>Location</span>
+          <span>${area}</span>
+        </div>
+        <div class="success-row">
+          <span>Details</span>
+          <span>${typeDetail}</span>
+        </div>
+        <div class="success-row">
+          <span>Expires in</span>
+          <span>30 days</span>
+        </div>
+        <div class="success-row">
+          <span>Trust Score</span>
+          <span>50/100 (new member)</span>
+        </div>
+      `;
+
+      setStep(3);
+      showToast('🎉 Listing is now live on the browse page!');
+    }
+
+    // ─────────────────────────────────────────
+    // TOGGLE LISTING FIELDS
+    // ─────────────────────────────────────────
+    function toggleListingFields() {
+      const type = document.getElementById('l-type').value;
+      document.getElementById('resource-fields').style.display = type === 'resource' ? 'block' : 'none';
+      document.getElementById('housing-fields').style.display  = type === 'housing'  ? 'block' : 'none';
+      document.getElementById('skill-fields').style.display    = type === 'skill'    ? 'block' : 'none';
+    }
+
+    // ─────────────────────────────────────────
+    // LOAD USERS FOR TRUST TAB
+    // ─────────────────────────────────────────
+    async function loadUsers() {
+      try {
+        const res  = await fetch(`${API}/api/users`);
+        const data = await res.json();
+        allUsers   = data.data || [];
+        renderTrustList();
+      } catch (err) {
+        document.getElementById('trust-user-list').innerHTML =
+          '<div class="empty">Could not load users</div>';
+      }
+    }
+
+    function renderTrustList() {
+      const list = document.getElementById('trust-user-list');
+      list.innerHTML = allUsers.map(u => {
+        const initials = u.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        return `
+          <div class="user-trust-row" id="trust-row-${u._id}"
+               onclick="selectTrustUser('${u._id}', '${u.name}')">
+            <div class="avatar">${initials}</div>
+            <div class="user-info">
+              <div class="user-name">${u.name}</div>
+              <div class="user-meta">
+                📍 ${u.location?.address || '—'} · ⭐ ${u.rating || 0}
+              </div>
+              <div class="trust-bar-bg">
+                <div class="trust-bar-fill" id="bar-${u._id}"
+                     style="width:${u.trustScore}%"></div>
+              </div>
+            </div>
+            <div class="trust-score-display" id="score-${u._id}">
+              ${u.trustScore}/100
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectTrustUser(userId, userName) {
+      selectedUserId   = userId;
+      selectedUserName = userName;
+      document.querySelectorAll('.user-trust-row').forEach(r => r.classList.remove('selected'));
+      document.getElementById(`trust-row-${userId}`).classList.add('selected');
+      document.getElementById('trust-selected-name').textContent = `Updating: ${userName}`;
+      document.getElementById('trust-controls').classList.add('show');
+    }
+
+    async function updateTrust(change) {
+      if (!selectedUserId) { showToast('Select a user first'); return; }
+
+      try {
+        const res  = await fetch(`${API}/api/users/${selectedUserId}`);
+        const data = await res.json();
+        const newScore = Math.min(100, Math.max(0, data.data.trustScore + change));
+
+        await fetch(`${API}/api/users/${selectedUserId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ trustScore: newScore }),
+        });
+
+        document.getElementById(`score-${selectedUserId}`).textContent = `${newScore}/100`;
+        document.getElementById(`bar-${selectedUserId}`).style.width   = `${newScore}%`;
+
+        const idx = allUsers.findIndex(u => u._id === selectedUserId);
+        if (idx !== -1) allUsers[idx].trustScore = newScore;
+
+        showToast(`${change > 0 ? '▲' : '▼'} ${selectedUserName}: ${newScore}/100`);
+
+      } catch (err) {
+        showToast('Failed to update trust score');
+      }
+    }
+
+    // ─────────────────────────────────────────
+    // TOAST
+    // ─────────────────────────────────────────
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // ─────────────────────────────────────────
+    // INIT
+    // ─────────────────────────────────────────
+    function initializePage() {
+      const userStr = localStorage.getItem('localnest_user');
+      const token = localStorage.getItem('localnest_token');
+
+      // If user is already logged in, skip step 1 and use their ID
+      if (userStr && token) {
+        const user = JSON.parse(userStr);
+        createdUserId = user._id;
+
+        // Pre-fill user details for reference
+        document.getElementById('u-name').value = user.name || '';
+        document.getElementById('u-email').value = user.email || '';
+        document.getElementById('u-phone').value = user.phone || '';
+
+        // Show logged-in message and skip button
+        document.getElementById('step1-logged-in-msg').style.display = 'block';
+        document.getElementById('skip-user-btn').style.display = 'block';
+        document.querySelector('#step1 .submit-btn').style.display = 'none';
+
+        // Skip directly to step 2 (listing form)
+        setStep(2);
+      }
+    }
+
+    loadUsers();
+    initializePage();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lender Dashboard — LocalNest</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .lend-dashboard-layout {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 30px;
+    }
+
+    .lender-sidebar {
+      background: white;
+      border-radius: var(--radius);
+      padding: 30px 24px;
+      box-shadow: var(--shadow);
+      height: fit-content;
+      text-align: center;
+      position: sticky;
+      top: 100px;
+    }
+
+    .lender-avatar {
+      width: 80px;
+      height: 80px;
+      background: var(--primary);
+      color: white;
+      font-size: 2rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+    }
+
+    .lender-name {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .lender-role {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .lender-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      padding: 20px 0;
+      margin-bottom: 24px;
+    }
+
+    .lender-stat-box {
+      text-align: center;
+    }
+
+    .lender-stat-val {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    .lender-stat-lbl {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .lender-main {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .dashboard-tabs {
+      display: flex;
+      gap: 16px;
+      border-bottom: 2px solid #eee;
+      margin-bottom: 10px;
+    }
+
+    .dashboard-tab {
+      padding: 12px 4px;
+      color: var(--muted);
+      font-weight: 700;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+
+    .dashboard-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .dashboard-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+      transition: transform 0.2s;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .request-item {
+      border: 1px solid #eef0f6;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      background: #fafbfe;
+    }
+
+    .action-btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      border-radius: 20px;
+      font-weight: 700;
+    }
+
+    .btn-approve { background: var(--green); color: white; }
+    .btn-reject { background: #ff5252; color: white; }
+    .btn-action { background: var(--primary); color: white; }
+
+    @media (max-width: 900px) {
+      .lend-dashboard-layout { grid-template-columns: 1fr; }
+      .lender-sidebar { position: static; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo" style="cursor: pointer;" onclick="window.location.href='index.html'">Local<span>Nest</span></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="home.html">Browse All</a>
+      <a href="housing.html">Housing</a>
+      <a href="borrow.html">Borrow Items</a>
+      <a href="lend.html" style="color:white; font-weight:bold;">Lend Dashboard</a>
+      <a href="needs.html">Needs</a>
+      <a href="emergency.html">🚨 Emergency Support</a>
+      <a href="notifications.html" id="nav-notif-icon" style="display:none;">🔔 <span id="nav-notif-count" style="display:none;background:red;color:white;border-radius:50%;padding:2px 6px;font-size:0.7rem;">0</span></a>
+      <a href="profile.html" id="nav-profile-link" style="display:none;">My Profile</a>
+      <a href="login.html" id="nav-login" class="nav-btn">Login / Demo</a>
+      <a href="#" id="nav-logout" class="nav-btn" style="display:none; background:#eee; color:#333;" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="lend-dashboard-layout">
+    
+    <!-- Sidebar -->
+    <aside class="lender-sidebar">
+      <div class="lender-avatar" id="l-avatar">U</div>
+      <div class="lender-name" id="l-name">Lender Account</div>
+      <div class="lender-role" id="l-role">Lender / Community Member</div>
+      
+      <div class="lender-stats">
+        <div class="lender-stat-box">
+          <div class="lender-stat-val" id="l-trust">50</div>
+          <div class="lender-stat-lbl">Trust Score</div>
+        </div>
+        <div class="lender-stat-box">
+          <div class="lender-stat-val" id="l-active-count">0</div>
+          <div class="lender-stat-lbl">Active Listings</div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%; margin-bottom:12px;" onclick="window.location.href='add.html'">
+        ➕ Post New Listing
+      </button>
+      
+      <div style="background:#f4f6fb; padding:16px; border-radius:10px; font-size:0.85rem; color:#555; text-align:left;">
+        💡 <strong>Did you know?</strong> Returning borrowed items on time and confirming receipt quickly increases your Community Trust Score!
+      </div>
+    </aside>
+
+    <!-- Main Dashboard -->
+    <main class="lender-main">
+      <div style="background:white; border-radius:var(--radius); padding:24px; box-shadow:var(--shadow);">
+        <h2 style="font-weight:800; margin-bottom:20px; color:var(--dark);">Lender & Provider Panel</h2>
+        
+        <div class="dashboard-tabs">
+          <div class="dashboard-tab active" onclick="switchTab('listings', this)">My Listings</div>
+          <div class="dashboard-tab" onclick="switchTab('requests', this)">Incoming Requests <span id="req-badge" style="display:none; background:red; color:white; border-radius:50%; padding:2px 6px; font-size:0.7rem;">0</span></div>
+          <div class="dashboard-tab" onclick="switchTab('exchanges', this)">Active Exchanges</div>
+        </div>
+
+        <!-- My Listings -->
+        <div id="tab-listings" class="tab-content" style="margin-top:20px;">
+          <div id="myListingsContainer">
+            <div class="loading">Loading listings...</div>
+          </div>
+        </div>
+
+        <!-- Incoming Requests -->
+        <div id="tab-requests" class="tab-content" style="display:none; margin-top:20px;">
+          <div id="incomingRequestsContainer">
+            <div class="loading">Loading incoming requests...</div>
+          </div>
+        </div>
+
+        <!-- Active Exchanges -->
+        <div id="tab-exchanges" class="tab-content" style="display:none; margin-top:20px;">
+          <div id="activeExchangesContainer">
+            <div class="loading">Loading active exchanges...</div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Shared JS and specific Lender JS -->
+  <script src="js/app.js"></script>
+  <script src="js/lend.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Roommates & Housing — LocalNest</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    /* Housing specific styles */
+    .housing-layout {
+      display: flex;
+      max-width: 1300px;
+      margin: 40px auto;
+      padding: 0 24px;
+      gap: 30px;
+    }
+    
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      background: white;
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      height: fit-content;
+      position: sticky;
+      top: 90px;
+    }
+
+    .main-content {
+      flex: 1;
+    }
+
+    .filter-group {
+      margin-bottom: 20px;
+    }
+
+    .filter-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .filter-group select, .filter-group input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .filter-group select:focus, .filter-group input:focus {
+      border-color: var(--primary);
+    }
+
+    .sidebar-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+
+    .sidebar-btn:hover {
+      background: #5a52e0;
+    }
+
+    /* Housing Card Enhancements */
+    .housing-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .housing-img-placeholder {
+      height: 160px;
+      background: #e0e7ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 2rem;
+    }
+
+    .society-badge {
+      display: inline-block;
+      background: #fff3e0;
+      color: #e65100;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .distance-pill {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      backdrop-filter: blur(4px);
+    }
+
+    .gender-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: #f5f5f5;
+      color: #555;
+    }
+    
+    .gender-male { background: #e3f2fd; color: #1565c0; }
+    .gender-female { background: #fce4ec; color: #c2185b; }
+    
+    .compatibility-score {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #eee;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 900px) {
+      .housing-layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="logo" style="cursor: pointer;" onclick="window.location.href='index.html'">Local<span>Nest</span></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="home.html">Browse All</a>
+      <a href="housing.html" style="color:white; font-weight:bold;">Housing</a>
+      <a href="borrow.html">Borrow Items</a>
+      <a href="lend.html">Lend Dashboard</a>
+      <a href="needs.html">Needs</a>
+      <a href="emergency.html">🚨 Emergency Support</a>
+      <a href="notifications.html" id="nav-notif-icon" style="display:none;">🔔 <span id="nav-notif-count" style="display:none;background:red;color:white;border-radius:50%;padding:2px 6px;font-size:0.7rem;">0</span></a>
+      <a href="profile.html" id="nav-profile-link" style="display:none;">My Profile</a>
+      <a href="login.html" id="nav-login" class="nav-btn">Login / Demo</a>
+      <a href="#" id="nav-logout" class="nav-btn" style="display:none; background:#eee; color:#333;" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="feed-header" style="background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);">
+    <h1>🏠 Roommates & Housing</h1>
+    <p>Find trusted flatmates and rooms in your society</p>
+  </div>
+
+  <div class="housing-layout">
+    
+    <!-- Filter Sidebar -->
+    <aside class="sidebar">
+      <div class="filter-group">
+        <label>Flat Type</label>
+        <select id="f-flattype">
+          <option value="">Any Type</option>
+          <option value="pg">PG</option>
+          <option value="single">Single Room</option>
+          <option value="shared">Shared Room</option>
+          <option value="1bhk">1 BHK</option>
+          <option value="2bhk">2 BHK</option>
+          <option value="3bhk">3 BHK</option>
+          <option value="flat">Full Flat</option>
+          <option value="hostel">Hostel</option>
+          <option value="sublet">Sublet</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Rent Range (₹)</label>
+        <div style="display:flex; gap:10px;">
+          <input type="number" id="f-minrent" placeholder="Min" />
+          <input type="number" id="f-maxrent" placeholder="Max" />
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>Gender Preference</label>
+        <select id="f-gender">
+          <option value="any">Any</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Furnishing</label>
+        <select id="f-furnished">
+          <option value="">Any</option>
+          <option value="furnished">Fully Furnished</option>
+          <option value="semi-furnished">Semi-Furnished</option>
+          <option value="unfurnished">Unfurnished</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label>Society / Apartment Name</label>
+        <input type="text" id="f-society" placeholder="e.g. Prestige Lakeside" />
+      </div>
+
+      <div class="filter-group">
+        <label>Distance Limit</label>
+        <select id="f-distance">
+          <option value="50">Any distance (50km)</option>
+          <option value="3">Within 3 km</option>
+          <option value="5">Within 5 km</option>
+          <option value="10">Within 10 km</option>
+          <option value="15">Within 15 km</option>
+        </select>
+      </div>
+
+      <button class="sidebar-btn" onclick="applyHousingFilters()">Apply Filters</button>
+      <button class="sidebar-btn" onclick="detectLocationAndFilter()" style="background:#e0e0e0; color:#333; margin-top:10px;">📍 Detect My Location</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+        <h2 id="resultsInfo" style="font-size: 1.2rem; color: var(--dark);">Showing all housing...</h2>
+        <div style="font-size: 0.9rem; color: var(--muted);" id="locationStatus">Location not detected</div>
+      </div>
+
+      <div class="listings-grid" id="listingsGrid">
+        <div class="loading">⏳ Loading housing listings...</div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Modal overlay -->
+  <div id="modal-overlay" onclick="handleOverlayClick(event)"></div>
+  <div class="toast" id="toast"></div>
+
+  <!-- Shared JS (for modals and toasts) and specific Housing JS -->
+  <script src="js/app.js"></script>
+  <script src="js/housing.js"></script>
+
+</body>
+</html>

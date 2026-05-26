@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Community Needs — LocalNest</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .needs-layout {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .request-form-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: 0 10px 30px rgba(108, 99, 255, 0.15);
+      margin-bottom: 40px;
+      border: 2px solid #eef2ff;
+    }
+
+    .form-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .form-header-icon {
+      font-size: 2.5rem;
+      background: #eef2ff;
+      padding: 16px;
+      border-radius: 50%;
+      color: var(--primary);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group.full-width { grid-column: 1 / -1; }
+    
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .request-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .request-btn:hover { background: #5a52e0; transform: translateY(-2px); }
+
+    /* Needs Board */
+    .board-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 16px;
+    }
+    
+    .board-header h2 { font-size: 1.6rem; font-weight: 800; }
+
+    .needs-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .need-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border-left: 5px solid #ccc;
+    }
+
+    .need-card.urgency-low { border-left-color: #2ecc71; }
+    .need-card.urgency-medium { border-left-color: #f39c12; }
+    .need-card.urgency-high { border-left-color: #e67e22; }
+    .need-card.urgency-critical { border-left-color: #e74c3c; animation: pulse-border 2s infinite; }
+
+    @keyframes pulse-border {
+      0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+    }
+
+    .need-info { flex: 1; }
+    
+    .need-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; }
+    
+    .need-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    
+    .urgency-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .badge-low { background: #e8f8f5; color: #2ecc71; }
+    .badge-medium { background: #fef5e7; color: #f39c12; }
+    .badge-high { background: #fdf2e9; color: #e67e22; }
+    .badge-critical { background: #fdedec; color: #e74c3c; }
+
+    .help-btn {
+      padding: 12px 24px;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      white-space: nowrap;
+    }
+    
+    .help-btn:hover { background: #27ae60; transform: translateY(-2px); }
+
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .need-card { flex-direction: column; align-items: stretch; text-align: left; }
+      .help-btn { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="logo" style="cursor: pointer;" onclick="window.location.href='index.html'">Local<span>Nest</span></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="home.html">Browse All</a>
+      <a href="housing.html">Housing</a>
+      <a href="borrow.html">Borrow Items</a>
+      <a href="lend.html">Lend Dashboard</a>
+      <a href="needs.html" style="color:white; font-weight:bold;">Needs</a>
+      <a href="emergency.html">🚨 Emergency Support</a>
+      <a href="notifications.html" id="nav-notif-icon" style="display:none;">🔔 <span id="nav-notif-count" style="display:none;background:red;color:white;border-radius:50%;padding:2px 6px;font-size:0.7rem;">0</span></a>
+      <a href="profile.html" id="nav-profile-link" style="display:none;">My Profile</a>
+      <a href="login.html" id="nav-login" class="nav-btn">Login / Demo</a>
+      <a href="#" id="nav-logout" class="nav-btn" style="display:none; background:#eee; color:#333;" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="feed-header" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+    <h1>🙏 Community Needs</h1>
+    <p>Ask your neighbors for help, or offer what you have to someone in need.</p>
+  </div>
+
+  <div class="needs-layout">
+    
+    <!-- Request Form -->
+    <div class="request-form-card">
+      <div class="form-header">
+        <div class="form-header-icon">📢</div>
+        <div>
+          <h2 style="font-size:1.6rem; font-weight:800; color:var(--dark);">Need Something? Ask the Community!</h2>
+          <p style="color:var(--muted); margin-top:4px;">We'll notify neighbors who might have it.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>What do you need?</label>
+          <input type="text" id="n-item" placeholder="e.g. Power Drill, Sleeping Bag" />
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="n-category">
+            <option value="tools">Tools & DIY</option>
+            <option value="electronics">Electronics</option>
+            <option value="books">Books</option>
+            <option value="furniture">Furniture</option>
+            <option value="kitchen">Kitchen</option>
+            <option value="others" selected>Others</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Urgency Level</label>
+          <select id="n-urgency">
+            <option value="low">Low (Whenever possible)</option>
+            <option value="medium" selected>Medium (Next few days)</option>
+            <option value="high">High (Needed today/tomorrow)</option>
+            <option value="critical">Critical (Emergency / Right now)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Needed By Date (Optional)</label>
+          <input type="date" id="n-date" />
+        </div>
+        <div class="form-group full-width">
+          <label>Additional Details</label>
+          <textarea id="n-desc" placeholder="Explain why you need it or any specific requirements..."></textarea>
+        </div>
+        <div class="form-group full-width" style="display:flex; gap:16px;">
+           <button class="btn btn-outline" style="border-color:#ccc; color:#555;" onclick="detectLocationForNeed()">📍 Auto-Detect Location</button>
+           <span id="needLocStatus" style="align-self:center; font-size:0.85rem; color:#888;">Location required to notify neighbors</span>
+        </div>
+      </div>
+      
+      <button class="request-btn" onclick="postNeedRequest()">Broadcast Request to Neighbors 🚀</button>
+    </div>
+
+    <!-- Live Needs Board -->
+    <div class="board-header">
+      <h2>Live Community Requests</h2>
+      <div style="display:flex; gap:10px;">
+        <select id="filter-urgency" style="padding:8px; border-radius:8px; border:1px solid #ccc; outline:none;" onchange="loadNeedRequests()">
+          <option value="">All Urgencies</option>
+          <option value="critical">Critical</option>
+          <option value="high">High</option>
+        </select>
+        <button class="btn btn-outline" style="padding:8px 16px; border-color:var(--primary); color:var(--primary);" onclick="loadNeedRequests()">🔄 Refresh</button>
+      </div>
+    </div>
+
+    <div class="needs-grid" id="needsGrid">
+      <div class="loading">⏳ Loading community requests...</div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Shared JS and specific Needs JS -->
+  <script src="js/app.js"></script>
+  <script src="js/needs.js"></script>
+
+</body>
+</html>
